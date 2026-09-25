@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mafia — The Game</title>
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       SCREEN: Landing / Home
+  ═══════════════════════════════════════════ -->
+  <div id="screen-home" class="screen active">
+    <div class="home-bg">
+      <div class="moon"></div>
+      <div class="stars" id="stars"></div>
+    </div>
+    <div class="home-content">
+      <div class="logo">
+        <span class="logo-icon">🎭</span>
+        <h1 class="logo-title">MAFIA</h1>
+        <p class="logo-subtitle">The Social Deduction Game</p>
+      </div>
+
+      <div class="home-cards">
+        <!-- Create Room -->
+        <div class="card" id="card-create">
+          <h2>Create Room</h2>
+          <p>Start a new game and invite up to 11 friends.</p>
+          <div class="form-group">
+            <label for="create-name">Your Name</label>
+            <input
+              type="text"
+              id="create-name"
+              placeholder="Enter your name…"
+              maxlength="20"
+              autocomplete="off"
+            />
+          </div>
+          <button class="btn btn-primary" id="btn-create">Create Game</button>
+        </div>
+
+        <!-- Join Room -->
+        <div class="card" id="card-join">
+          <h2>Join Room</h2>
+          <p>Enter a room code to join an existing game.</p>
+          <div class="form-group">
+            <label for="join-name">Your Name</label>
+            <input
+              type="text"
+              id="join-name"
+              placeholder="Enter your name…"
+              maxlength="20"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="join-code">Room Code</label>
+            <input
+              type="text"
+              id="join-code"
+              placeholder="e.g. AB3X7K"
+              maxlength="6"
+              autocomplete="off"
+              style="text-transform:uppercase; letter-spacing: 0.2em;"
+            />
+          </div>
+          <button class="btn btn-secondary" id="btn-join">Join Game</button>
+        </div>
+      </div>
+
+      <div id="home-error" class="error-banner hidden"></div>
+
+      <div class="how-to-play">
+        <button class="btn btn-ghost" id="btn-rules">How to Play ▾</button>
+        <div class="rules-panel hidden" id="rules-panel">
+          <h3>Roles</h3>
+          <ul class="role-list">
+            <li><span class="role-badge mafia">🔫 Mafia</span> Eliminate one villager each night. Win when Mafia ≥ remaining villagers.</li>
+            <li><span class="role-badge detective">🔍 Detective</span> Investigate one player each night to reveal their alignment.</li>
+            <li><span class="role-badge doctor">💉 Doctor</span> Protect one player per night. Can only self-save once.</li>
+            <li><span class="role-badge villager">🏘️ Villager</span> Use discussion and logic to vote out the Mafia during the day.</li>
+          </ul>
+          <h3>Phases</h3>
+          <ol>
+            <li><strong>Night</strong> — Mafia chooses a target. Doctor saves. Detective investigates. (30s)</li>
+            <li><strong>Day Reveal</strong> — The night's outcome is announced. (5s)</li>
+            <li><strong>Discussion</strong> — All alive players debate who the Mafia is. (90s)</li>
+            <li><strong>Vote</strong> — Vote to eliminate a suspect. Majority required. (40s)</li>
+          </ol>
+          <h3>Player Count</h3>
+          <ul>
+            <li>4–5 players → 1 Mafia</li>
+            <li>6–8 players → 2 Mafia</li>
+            <li>9–12 players → 3 Mafia</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SCREEN: Lobby / Waiting Room
+  ═══════════════════════════════════════════ -->
+  <div id="screen-lobby" class="screen">
+    <div class="lobby-header">
+      <div class="room-code-display">
+        <span class="room-code-label">Room Code</span>
+        <span class="room-code-value" id="lobby-room-code">------</span>
+        <button class="btn btn-ghost btn-sm" id="btn-copy-code" title="Copy room code">📋</button>
+      </div>
+      <div class="lobby-meta">
+        <span id="lobby-player-count">0 / 12 players</span>
+      </div>
+    </div>
+
+    <div class="lobby-body">
+      <div class="lobby-players-wrap">
+        <h2>Players</h2>
+        <ul class="player-list" id="lobby-player-list"></ul>
+        <p class="lobby-hint" id="lobby-hint">Waiting for players… (need at least 4)</p>
+      </div>
+
+      <div class="lobby-sidebar">
+        <div class="role-distribution" id="role-distribution"></div>
+        <div class="lobby-actions">
+          <button class="btn btn-primary btn-lg" id="btn-start" disabled>
+            Start Game
+          </button>
+          <button class="btn btn-ghost" id="btn-leave-lobby">Leave</button>
+        </div>
+        <p class="host-note" id="host-note"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SCREEN: Game Board
+  ═══════════════════════════════════════════ -->
+  <div id="screen-game" class="screen">
+
+    <!-- Top bar -->
+    <header class="game-header">
+      <div class="game-header-left">
+        <span class="game-phase-badge" id="phase-badge">Night</span>
+        <span class="game-round" id="round-label">Round 1</span>
+      </div>
+      <div class="game-header-center">
+        <div class="phase-timer" id="phase-timer">
+          <svg class="timer-ring" viewBox="0 0 44 44">
+            <circle class="timer-ring-bg" cx="22" cy="22" r="18"/>
+            <circle class="timer-ring-fill" id="timer-ring-fill" cx="22" cy="22" r="18"/>
+          </svg>
+          <span class="timer-value" id="timer-value">--</span>
+        </div>
+      </div>
+      <div class="game-header-right">
+        <div class="my-role-pill" id="my-role-pill"></div>
+      </div>
+    </header>
+
+    <!-- Main layout -->
+    <div class="game-layout">
+
+      <!-- Left: Players panel -->
+      <aside class="players-panel">
+        <h3>Players <span id="alive-count" class="alive-count"></span></h3>
+        <ul class="game-player-list" id="game-player-list"></ul>
+      </aside>
+
+      <!-- Center: Phase content -->
+      <main class="game-main" id="game-main">
+
+        <!-- Phase: Night -->
+        <div class="phase-panel" id="panel-night">
+          <div class="phase-header">
+            <h2>🌙 Night Falls</h2>
+            <p class="phase-desc" id="night-desc">The village sleeps. Shadows move…</p>
+          </div>
+          <div class="night-action-area" id="night-action-area">
+            <!-- Populated by JS based on role -->
+          </div>
+          <div class="waiting-indicator" id="night-waiting">
+            <div class="spinner"></div>
+            <p>Waiting for other players to act…</p>
+          </div>
+        </div>
+
+        <!-- Phase: Day Reveal -->
+        <div class="phase-panel" id="panel-day-reveal">
+          <div class="phase-header">
+            <h2>🌅 Dawn Breaks</h2>
+          </div>
+          <div class="reveal-content" id="reveal-content">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Phase: Day Discussion -->
+        <div class="phase-panel" id="panel-day-discuss">
+          <div class="phase-header">
+            <h2>☀️ Town Meeting</h2>
+            <p>Discuss and find the Mafia before voting begins.</p>
+          </div>
+          <div class="discuss-status" id="discuss-status"></div>
+        </div>
+
+        <!-- Phase: Day Vote -->
+        <div class="phase-panel" id="panel-day-vote">
+          <div class="phase-header">
+            <h2>🗳️ Cast Your Vote</h2>
+            <p>Vote to eliminate a suspect. You need a majority.</p>
+          </div>
+          <div class="vote-tally-bar" id="vote-tally-bar"></div>
+          <div class="vote-action-area" id="vote-action-area">
+            <!-- Player vote buttons rendered by JS -->
+          </div>
+          <div class="vote-skip-area">
+            <button class="btn btn-ghost" id="btn-vote-skip">Skip — No Elimination</button>
+          </div>
+        </div>
+
+        <!-- Phase: Vote Result -->
+        <div class="phase-panel" id="panel-vote-result">
+          <div class="vote-result-content" id="vote-result-content">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Phase: Game Over -->
+        <div class="phase-panel" id="panel-game-over">
+          <div class="game-over-content" id="game-over-content">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </main>
+
+      <!-- Right: Chat panel -->
+      <aside class="chat-panel">
+        <div class="chat-header">
+          <h3>💬 Chat</h3>
+          <span class="chat-mode-label" id="chat-mode-label"></span>
+        </div>
+        <div class="chat-messages" id="chat-messages" aria-live="polite" aria-label="Chat messages"></div>
+        <div class="chat-input-wrap">
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="Type a message…"
+            maxlength="200"
+            autocomplete="off"
+            aria-label="Chat message"
+          />
+          <button class="btn btn-primary btn-sm" id="btn-chat-send">Send</button>
+        </div>
+      </aside>
+
+    </div><!-- /game-layout -->
+
+    <!-- Event log drawer -->
+    <div class="event-log-toggle">
+      <button class="btn btn-ghost btn-sm" id="btn-toggle-log">📜 Event Log</button>
+    </div>
+    <div class="event-log-panel hidden" id="event-log-panel">
+      <ul id="event-log-list"></ul>
+    </div>
+
+  </div><!-- /screen-game -->
+
+  <!-- ═══════════════════════════════════════════
+       GLOBAL: Toast notifications
+  ═══════════════════════════════════════════ -->
+  <div id="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- ═══════════════════════════════════════════
+       GLOBAL: Connection status bar
+  ═══════════════════════════════════════════ -->
+  <div id="connection-bar" class="connection-bar hidden">
+    <span id="connection-msg">⚠️ Reconnecting…</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       GLOBAL: Role reveal modal
+  ═══════════════════════════════════════════ -->
+  <div id="modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-box" id="modal-box">
+      <div class="modal-content" id="modal-content"></div>
+      <button class="btn btn-primary btn-lg" id="modal-close">Got it!</button>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/client.js"></script>
+</body>
+</html>
