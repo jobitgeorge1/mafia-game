@@ -1,17 +1,20 @@
 /**
- * Mafia Game Server — Entry point
+ * Game Night Server — Entry point
  *
- * Stack:
- *   Express  — serves static files (frontend)
- *   Socket.io — real-time bidirectional communication
+ * Hosts two games on the same server:
+ *   🎭 Mafia      — social deduction / elimination
+ *   🕵️ Undercover — word deduction / imposter
+ *
+ * Stack: Express + Socket.io
  */
 
 const express = require('express');
-const http = require('http');
-const path = require('path');
+const http    = require('http');
+const path    = require('path');
 const { Server } = require('socket.io');
-const { RoomManager } = require('./roomManager');
-const { registerHandlers } = require('./socketHandlers');
+const { RoomManager }               = require('./roomManager');
+const { registerHandlers }          = require('./socketHandlers');
+const { registerUndercoverHandlers } = require('./undercoverHandlers');
 
 const PORT = process.env.PORT || 3000;
 
@@ -39,9 +42,9 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 // Health check endpoint (useful for deployments)
 app.get('/health', (_req, res) => {
   res.json({
-    status: 'ok',
-    rooms: roomManager?.getStats?.() || {},
-    uptime: process.uptime(),
+    status:  'ok',
+    mafia:   roomManager?.getStats?.() || {},
+    uptime:  process.uptime(),
   });
 });
 
@@ -51,16 +54,19 @@ app.get('*', (_req, res) => {
 });
 
 // ─────────────────────────────────────────────
-// GAME LAYER
+// GAME LAYER — both games share one RoomManager
 // ─────────────────────────────────────────────
 const roomManager = new RoomManager(io);
-registerHandlers(io, roomManager);
+registerHandlers(io, roomManager);            // 🎭 Mafia
+registerUndercoverHandlers(io, roomManager);  // 🕵️ Undercover
 
 // ─────────────────────────────────────────────
 // START SERVER
 // ─────────────────────────────────────────────
 server.listen(PORT, () => {
-  console.log(`\n🎭  Mafia Game Server running at http://localhost:${PORT}\n`);
+  console.log(`\n🎮  Game Night Server running at http://localhost:${PORT}`);
+  console.log(`    🎭  Mafia game ready`);
+  console.log(`    🕵️   Undercover game ready\n`);
 });
 
 // ─────────────────────────────────────────────

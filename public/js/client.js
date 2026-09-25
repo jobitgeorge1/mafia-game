@@ -60,6 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
   bindGameEvents();
   initSocket();
   attemptReconnect();
+  // Ensure UC cards start hidden (JS-controlled, not CSS-only)
+  document.querySelectorAll('.card.uc-card').forEach(c => c.style.display = 'none');
 });
 
 // ═══════════════════════════════════════════════
@@ -323,10 +325,16 @@ function bindHomeEvents() {
 
   // Rules toggle
   qs('#btn-rules').addEventListener('click', () => {
-    const panel = qs('#rules-panel');
+    const panel   = qs('#rules-panel');
     const isHidden = panel.classList.contains('hidden');
     panel.classList.toggle('hidden', !isHidden);
     qs('#btn-rules').textContent = isHidden ? 'How to Play ▴' : 'How to Play ▾';
+    // Show the correct sub-panel based on active game
+    if (isHidden) {
+      const isUC = document.body.classList.contains('game-undercover');
+      qs('#rules-mafia')?.classList.toggle('hidden', isUC);
+      qs('#rules-undercover')?.classList.toggle('hidden', !isUC);
+    }
   });
 }
 

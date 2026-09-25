@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mafia — The Game</title>
+  <title>Game Night — Mafia &amp; Undercover</title>
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,14 +21,28 @@
     </div>
     <div class="home-content">
       <div class="logo">
-        <span class="logo-icon">🎭</span>
-        <h1 class="logo-title">MAFIA</h1>
-        <p class="logo-subtitle">The Social Deduction Game</p>
+        <span class="logo-icon">🎮</span>
+        <h1 class="logo-title">GAME NIGHT</h1>
+        <p class="logo-subtitle">Social Deduction Games</p>
+      </div>
+
+      <!-- Game Picker -->
+      <div class="game-picker">
+        <button class="game-pick-btn active" id="pick-mafia" data-game="mafia">
+          <span class="gp-emoji">🎭</span>
+          <span class="gp-name">Mafia</span>
+          <span class="gp-desc">Deception &amp; Elimination</span>
+        </button>
+        <button class="game-pick-btn" id="pick-undercover" data-game="undercover">
+          <span class="gp-emoji">🕵️</span>
+          <span class="gp-name">Undercover</span>
+          <span class="gp-desc">Words &amp; Deduction</span>
+        </button>
       </div>
 
       <div class="home-cards">
-        <!-- Create Room -->
-        <div class="card" id="card-create">
+        <!-- Mafia: Create Room -->
+        <div class="card mafia-card" id="card-create">
           <h2>Create Room</h2>
           <p>Start a new game and invite up to 11 friends.</p>
           <div class="form-group">
@@ -44,8 +58,8 @@
           <button class="btn btn-primary" id="btn-create">Create Game</button>
         </div>
 
-        <!-- Join Room -->
-        <div class="card" id="card-join">
+        <!-- Mafia: Join Room -->
+        <div class="card mafia-card" id="card-join">
           <h2>Join Room</h2>
           <p>Enter a room code to join an existing game.</p>
           <div class="form-group">
@@ -71,33 +85,105 @@
           </div>
           <button class="btn btn-secondary" id="btn-join">Join Game</button>
         </div>
+
+        <!-- Undercover: Create Room -->
+        <div class="card uc-card" id="uc-card-create">
+          <h2>Create Room</h2>
+          <p>Start an Undercover game for 3–12 players.</p>
+          <div class="form-group">
+            <label for="uc-create-name">Your Name</label>
+            <input
+              type="text"
+              id="uc-create-name"
+              placeholder="Enter your name…"
+              maxlength="20"
+              autocomplete="off"
+            />
+          </div>
+          <button class="btn btn-secondary" id="uc-btn-create">Create Game</button>
+        </div>
+
+        <!-- Undercover: Join Room -->
+        <div class="card uc-card" id="uc-card-join">
+          <h2>Join Room</h2>
+          <p>Enter a room code to join an existing game.</p>
+          <div class="form-group">
+            <label for="uc-join-name">Your Name</label>
+            <input
+              type="text"
+              id="uc-join-name"
+              placeholder="Enter your name…"
+              maxlength="20"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="uc-join-code">Room Code</label>
+            <input
+              type="text"
+              id="uc-join-code"
+              placeholder="e.g. AB3X7K"
+              maxlength="6"
+              autocomplete="off"
+              style="text-transform:uppercase; letter-spacing: 0.2em;"
+            />
+          </div>
+          <button class="btn btn-primary" id="uc-btn-join">Join Game</button>
+        </div>
       </div>
 
       <div id="home-error" class="error-banner hidden"></div>
+      <div id="uc-home-error" class="error-banner hidden"></div>
 
       <div class="how-to-play">
         <button class="btn btn-ghost" id="btn-rules">How to Play ▾</button>
         <div class="rules-panel hidden" id="rules-panel">
-          <h3>Roles</h3>
-          <ul class="role-list">
-            <li><span class="role-badge mafia">🔫 Mafia</span> Eliminate one villager each night. Win when Mafia ≥ remaining villagers.</li>
-            <li><span class="role-badge detective">🔍 Detective</span> Investigate one player each night to reveal their alignment.</li>
-            <li><span class="role-badge doctor">💉 Doctor</span> Protect one player per night. Can only self-save once.</li>
-            <li><span class="role-badge villager">🏘️ Villager</span> Use discussion and logic to vote out the Mafia during the day.</li>
-          </ul>
-          <h3>Phases</h3>
-          <ol>
-            <li><strong>Night</strong> — Mafia chooses a target. Doctor saves. Detective investigates. (30s)</li>
-            <li><strong>Day Reveal</strong> — The night's outcome is announced. (5s)</li>
-            <li><strong>Discussion</strong> — All alive players debate who the Mafia is. (90s)</li>
-            <li><strong>Vote</strong> — Vote to eliminate a suspect. Majority required. (40s)</li>
-          </ol>
-          <h3>Player Count</h3>
-          <ul>
-            <li>4–5 players → 1 Mafia</li>
-            <li>6–8 players → 2 Mafia</li>
-            <li>9–12 players → 3 Mafia</li>
-          </ul>
+          <!-- Mafia Rules -->
+          <div id="rules-mafia">
+            <h3>Roles</h3>
+            <ul class="role-list">
+              <li><span class="role-badge mafia">🔫 Mafia</span> Eliminate one villager each night. Win when Mafia ≥ remaining villagers.</li>
+              <li><span class="role-badge detective">🔍 Detective</span> Investigate one player each night to reveal their alignment.</li>
+              <li><span class="role-badge doctor">💉 Doctor</span> Protect one player per night. Can only self-save once.</li>
+              <li><span class="role-badge villager">🏘️ Villager</span> Use discussion and logic to vote out the Mafia during the day.</li>
+            </ul>
+            <h3>Phases</h3>
+            <ol>
+              <li><strong>Night</strong> — Mafia chooses a target. Doctor saves. Detective investigates. (30s)</li>
+              <li><strong>Day Reveal</strong> — The night's outcome is announced. (5s)</li>
+              <li><strong>Discussion</strong> — All alive players debate who the Mafia is. (90s)</li>
+              <li><strong>Vote</strong> — Vote to eliminate a suspect. Majority required. (40s)</li>
+            </ol>
+            <h3>Player Count</h3>
+            <ul>
+              <li>4–5 players → 1 Mafia</li>
+              <li>6–8 players → 2 Mafia</li>
+              <li>9–12 players → 3 Mafia</li>
+            </ul>
+          </div>
+          <!-- Undercover Rules -->
+          <div id="rules-undercover" class="hidden">
+            <h3>Roles</h3>
+            <ul class="role-list">
+              <li><span class="role-badge uc-civilian">👤 Civilian</span> You have the real word. Give hints without making it obvious.</li>
+              <li><span class="role-badge uc-undercover">🕵️ Undercover</span> You have a <em>similar but different</em> word. Blend in — don't get caught!</li>
+              <li><span class="role-badge uc-blank">❓ Blank</span> You have <em>no word</em>. Listen carefully and bluff your way through.</li>
+            </ul>
+            <h3>Phases</h3>
+            <ol>
+              <li><strong>Word Reveal</strong> — Each player privately sees their word (or nothing if Blank).</li>
+              <li><strong>Clue Giving</strong> — Players take turns giving exactly one one-word clue.</li>
+              <li><strong>Discussion</strong> — Open discussion to find the imposters.</li>
+              <li><strong>Vote</strong> — Vote to eliminate the most suspicious player.</li>
+              <li><strong>Blank Guess</strong> — If the Blank (or last Undercover) is eliminated, they get one chance to guess the civilian word and steal the win.</li>
+            </ol>
+            <h3>Win Conditions</h3>
+            <ul>
+              <li>🏆 <strong>Civilians</strong> win when all Undercovers and Blanks are eliminated.</li>
+              <li>🕵️ <strong>Undercover</strong> wins when they outnumber civilians, or correctly guess the civilian word when eliminated last.</li>
+              <li>❓ <strong>Blank</strong> wins by correctly guessing the civilian word when eliminated, or being the last one standing.</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -294,7 +380,276 @@
     </div>
   </div>
 
+  <!-- ═══════════════════════════════════════════
+       SCREEN: Undercover Lobby
+  ═══════════════════════════════════════════ -->
+  <div id="screen-uc-lobby" class="screen">
+    <div class="lobby-header">
+      <div class="room-code-display">
+        <span class="room-code-label">Room Code</span>
+        <span class="room-code-value" id="uc-lobby-room-code">------</span>
+        <button class="btn btn-ghost btn-sm" id="uc-btn-copy-code" title="Copy room code">📋</button>
+      </div>
+      <div class="lobby-meta">
+        <span class="uc-game-badge">🕵️ Undercover</span>
+        <span id="uc-lobby-player-count">0 / 12 players</span>
+      </div>
+    </div>
+
+    <div class="lobby-body">
+      <div class="lobby-players-wrap">
+        <h2>Players</h2>
+        <ul class="player-list" id="uc-lobby-player-list"></ul>
+        <p class="lobby-hint" id="uc-lobby-hint">Waiting for players… (need at least 3)</p>
+      </div>
+
+      <div class="lobby-sidebar">
+        <!-- Settings Panel (host only) -->
+        <div class="uc-settings-panel" id="uc-settings-panel">
+          <h4>⚙️ Game Settings</h4>
+
+          <div class="setting-row">
+            <label>Word Category</label>
+            <select id="uc-setting-category" class="uc-select">
+              <option value="random">🎲 Random (any category)</option>
+            </select>
+          </div>
+
+          <div class="setting-row" id="uc-custom-words-row" style="display:none">
+            <label>Custom Word A (Civilian)</label>
+            <input type="text" id="uc-custom-word-a" class="uc-input" placeholder="e.g. Pizza" maxlength="40" />
+            <label style="margin-top:8px">Custom Word B (Undercover)</label>
+            <input type="text" id="uc-custom-word-b" class="uc-input" placeholder="e.g. Flatbread" maxlength="40" />
+          </div>
+
+          <div class="setting-row">
+            <label>Undercover Players</label>
+            <div class="setting-toggle-group" id="uc-undercover-count-group">
+              <button class="stg-btn active" data-val="1">1</button>
+              <button class="stg-btn" data-val="2">2</button>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <label>Include Blank (No Word)</label>
+            <div class="setting-toggle-group" id="uc-include-blank-group">
+              <button class="stg-btn active" data-val="false">Off</button>
+              <button class="stg-btn" data-val="true">On</button>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <label>Clue Timer</label>
+            <div class="setting-toggle-group" id="uc-clue-time-group">
+              <button class="stg-btn" data-val="30">30s</button>
+              <button class="stg-btn active" data-val="60">60s</button>
+              <button class="stg-btn" data-val="90">90s</button>
+              <button class="stg-btn" data-val="0">None</button>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <label>Discussion Time</label>
+            <div class="setting-toggle-group" id="uc-discuss-time-group">
+              <button class="stg-btn" data-val="60">60s</button>
+              <button class="stg-btn active" data-val="90">90s</button>
+              <button class="stg-btn" data-val="120">2m</button>
+              <button class="stg-btn" data-val="180">3m</button>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <label>Vote Time</label>
+            <div class="setting-toggle-group" id="uc-vote-time-group">
+              <button class="stg-btn" data-val="30">30s</button>
+              <button class="stg-btn active" data-val="45">45s</button>
+              <button class="stg-btn" data-val="60">60s</button>
+            </div>
+          </div>
+
+          <div class="setting-row setting-checkboxes">
+            <label class="uc-check-label">
+              <input type="checkbox" id="uc-show-category" />
+              Show category to all players
+            </label>
+            <label class="uc-check-label">
+              <input type="checkbox" id="uc-allow-skip" checked />
+              Allow skipping clue turn
+            </label>
+            <label class="uc-check-label">
+              <input type="checkbox" id="uc-reveal-role" checked />
+              Reveal role when eliminated
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <label>Max Rounds <span style="color:var(--text-muted)">(0 = unlimited)</span></label>
+            <input type="number" id="uc-max-rounds" class="uc-input" value="0" min="0" max="20" style="width:80px" />
+          </div>
+        </div>
+
+        <!-- Viewer settings (non-host) -->
+        <div class="uc-settings-view hidden" id="uc-settings-view">
+          <h4>⚙️ Current Settings</h4>
+          <div id="uc-settings-view-content"></div>
+        </div>
+
+        <div class="lobby-actions">
+          <button class="btn btn-primary btn-lg" id="uc-btn-start" disabled>Start Game</button>
+          <button class="btn btn-ghost" id="uc-btn-leave-lobby">Leave</button>
+        </div>
+        <p class="host-note" id="uc-host-note"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SCREEN: Undercover Game Board
+  ═══════════════════════════════════════════ -->
+  <div id="screen-uc-game" class="screen">
+
+    <!-- Top bar -->
+    <header class="game-header uc-game-header">
+      <div class="game-header-left">
+        <span class="game-phase-badge" id="uc-phase-badge">Word Reveal</span>
+        <span class="game-round" id="uc-round-label">Round 1</span>
+      </div>
+      <div class="game-header-center">
+        <div class="phase-timer" id="uc-phase-timer">
+          <svg class="timer-ring" viewBox="0 0 44 44">
+            <circle class="timer-ring-bg" cx="22" cy="22" r="18"/>
+            <circle class="timer-ring-fill" id="uc-timer-ring-fill" cx="22" cy="22" r="18"/>
+          </svg>
+          <span class="timer-value" id="uc-timer-value">--</span>
+        </div>
+      </div>
+      <div class="game-header-right">
+        <div class="uc-word-pill" id="uc-word-pill">
+          <span class="uc-word-pill-label">Your Word</span>
+          <span class="uc-word-pill-value" id="uc-word-value">???</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main layout -->
+    <div class="game-layout">
+
+      <!-- Left: Players -->
+      <aside class="players-panel">
+        <h3>Players <span id="uc-alive-count" class="alive-count"></span></h3>
+        <ul class="game-player-list" id="uc-game-player-list"></ul>
+      </aside>
+
+      <!-- Center: Phase panels -->
+      <main class="game-main" id="uc-game-main">
+
+        <!-- Phase: Word Reveal -->
+        <div class="phase-panel" id="uc-panel-word-reveal">
+          <div class="phase-header">
+            <h2>🔒 Your Secret Word</h2>
+            <p>Memorise it. Don't show anyone. Game begins shortly…</p>
+          </div>
+          <div class="uc-word-reveal-area" id="uc-word-reveal-area"></div>
+        </div>
+
+        <!-- Phase: Clue Giving -->
+        <div class="phase-panel" id="uc-panel-clue-giving">
+          <div class="phase-header">
+            <h2>💬 Give Your Clue</h2>
+            <p id="uc-clue-instruction">Players take turns giving one clue. Don't say your word directly!</p>
+          </div>
+          <div class="uc-clue-board" id="uc-clue-board"></div>
+          <div class="uc-clue-input-area" id="uc-clue-input-area"></div>
+          <div class="uc-host-controls hidden" id="uc-host-controls">
+            <button class="btn btn-ghost btn-sm" id="uc-btn-host-advance">⏭ Skip Current Player</button>
+          </div>
+        </div>
+
+        <!-- Phase: Discussion -->
+        <div class="phase-panel" id="uc-panel-discussion">
+          <div class="phase-header">
+            <h2>🗣️ Open Discussion</h2>
+            <p>Debate who you think the Undercover is. Use the chat!</p>
+          </div>
+          <div class="uc-clue-board-readonly" id="uc-discussion-clues"></div>
+          <div class="uc-host-vote-btn hidden" id="uc-host-vote-btn">
+            <button class="btn btn-danger" id="uc-btn-host-start-vote">Start Vote Early</button>
+          </div>
+        </div>
+
+        <!-- Phase: Voting -->
+        <div class="phase-panel" id="uc-panel-voting">
+          <div class="phase-header">
+            <h2>🗳️ Cast Your Vote</h2>
+            <p>Who do you think is the Undercover? Majority needed to eliminate.</p>
+          </div>
+          <div class="vote-tally-bar" id="uc-vote-tally-bar"></div>
+          <div class="vote-action-area" id="uc-vote-action-area"></div>
+          <div class="vote-skip-area">
+            <button class="btn btn-ghost" id="uc-btn-vote-skip">Skip — No Elimination</button>
+          </div>
+        </div>
+
+        <!-- Phase: Vote Result -->
+        <div class="phase-panel" id="uc-panel-vote-result">
+          <div class="vote-result-content" id="uc-vote-result-content"></div>
+        </div>
+
+        <!-- Phase: Blank Guess -->
+        <div class="phase-panel" id="uc-panel-blank-guess">
+          <div class="phase-header">
+            <h2 id="uc-guess-title">❓ Last Chance Guess</h2>
+            <p id="uc-guess-subtitle">Eliminated player has 30 seconds to guess the civilian word.</p>
+          </div>
+          <div class="uc-guess-area" id="uc-guess-area">
+            <div class="uc-guess-waiting" id="uc-guess-waiting">
+              <div class="spinner"></div>
+              <p id="uc-guess-waiting-text">Waiting for their guess…</p>
+            </div>
+            <div class="uc-guess-input hidden" id="uc-guess-input">
+              <p class="uc-guess-prompt" id="uc-guess-prompt-text">What is the civilian word?</p>
+              <div class="uc-guess-form">
+                <input type="text" id="uc-guess-field" class="uc-input" placeholder="Type your guess…" maxlength="40" autocomplete="off" />
+                <button class="btn btn-primary" id="uc-btn-submit-guess">Guess!</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase: Game Over -->
+        <div class="phase-panel" id="uc-panel-game-over">
+          <div class="game-over-content" id="uc-game-over-content"></div>
+        </div>
+
+      </main>
+
+      <!-- Right: Chat -->
+      <aside class="chat-panel">
+        <div class="chat-header">
+          <h3>💬 Chat</h3>
+          <span class="chat-mode-label" id="uc-chat-mode-label"></span>
+        </div>
+        <div class="chat-messages" id="uc-chat-messages" aria-live="polite"></div>
+        <div class="chat-input-wrap">
+          <input type="text" id="uc-chat-input" placeholder="Type a message…" maxlength="200" autocomplete="off" aria-label="Chat message" />
+          <button class="btn btn-primary btn-sm" id="uc-btn-chat-send">Send</button>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- Event log -->
+    <div class="event-log-toggle">
+      <button class="btn btn-ghost btn-sm" id="uc-btn-toggle-log">📜 Event Log</button>
+    </div>
+    <div class="event-log-panel hidden" id="uc-event-log-panel">
+      <ul id="uc-event-log-list"></ul>
+    </div>
+
+  </div><!-- /screen-uc-game -->
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/client.js"></script>
+  <script src="/js/undercover-client.js"></script>
 </body>
 </html>

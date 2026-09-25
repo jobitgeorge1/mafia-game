@@ -147,13 +147,14 @@ class RoomManager {
   // UTILITIES
   // ─────────────────────────────────────────────
 
-  _generateUniqueCode() {
+  _generateUniqueCode(extraRooms) {
+    // extraRooms: optional Set/Map of additional codes to avoid (e.g. UC rooms)
     let code;
     do {
       code = Array.from({ length: CODE_LENGTH }, () =>
         CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]
       ).join('');
-    } while (this.rooms.has(code));
+    } while (this.rooms.has(code) || extraRooms?.has(code));
     return code;
   }
 

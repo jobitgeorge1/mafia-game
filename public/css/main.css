@@ -1138,3 +1138,491 @@ body {
   .target-grid, .vote-action-area { grid-template-columns: repeat(2, 1fr); }
   .final-players-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+
+/* ════════════════════════════════════════════════
+   GAME NIGHT — HOME SCREEN UPDATES
+   (Game picker, updated logo)
+════════════════════════════════════════════════ */
+
+.game-picker {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 600px;
+}
+
+.game-pick-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 32px;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font-body);
+  color: var(--text-secondary);
+  min-width: 160px;
+  flex: 1;
+}
+.game-pick-btn:hover {
+  border-color: var(--border-light);
+  background: var(--bg-raised);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+.game-pick-btn.active {
+  border-color: var(--accent-gold);
+  background: rgba(240,180,41,0.08);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-glow-gold);
+}
+.game-pick-btn[data-game="undercover"].active {
+  border-color: var(--accent-blue);
+  background: rgba(74,158,255,0.08);
+  box-shadow: 0 0 20px rgba(74,158,255,0.2);
+}
+.game-pick-btn .gp-emoji { font-size: 2.2rem; }
+.game-pick-btn .gp-name  { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; }
+.game-pick-btn .gp-desc  { font-size: 0.78rem; color: var(--text-muted); }
+
+/* Home cards: when game=undercover show uc cards only */
+.home-cards .card { display: flex; flex-direction: column; }
+.home-cards .card.uc-card { display: none; }
+body.game-undercover .home-cards .card.mafia-card { display: none; }
+body.game-undercover .home-cards .card.uc-card    { display: flex; }
+
+/* Undercover role badges in rules */
+.role-badge.uc-civilian   { background: rgba(74,158,255,0.15); color: var(--accent-blue); }
+.role-badge.uc-undercover { background: rgba(155,109,255,0.15); color: var(--accent-purple); }
+.role-badge.uc-blank      { background: rgba(144,144,160,0.2); color: #aab; }
+
+/* ════════════════════════════════════════════════
+   UNDERCOVER — CSS VARIABLES
+════════════════════════════════════════════════ */
+:root {
+  --uc-civilian-color:   #4a9eff;
+  --uc-undercover-color: #9b6dff;
+  --uc-blank-color:      #8899aa;
+  --uc-word-glow:        0 0 24px rgba(74,158,255,0.3);
+  --uc-accent:           #4a9eff;
+}
+
+/* ════════════════════════════════════════════════
+   UNDERCOVER — LOBBY GAME BADGE
+════════════════════════════════════════════════ */
+.uc-game-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: rgba(74,158,255,0.15);
+  color: var(--uc-accent);
+  border: 1px solid rgba(74,158,255,0.3);
+  margin-right: 10px;
+}
+
+/* ════════════════════════════════════════════════
+   UNDERCOVER — SETTINGS PANEL
+════════════════════════════════════════════════ */
+.uc-settings-panel,
+.uc-settings-view {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: calc(100vh - 280px);
+  overflow-y: auto;
+}
+.uc-settings-panel h4,
+.uc-settings-view h4 {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--uc-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.setting-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.setting-row label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.setting-toggle-group {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.stg-btn {
+  padding: 5px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  background: var(--bg-mid);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.stg-btn:hover  { background: var(--bg-raised); color: var(--text-primary); }
+.stg-btn.active {
+  background: rgba(74,158,255,0.15);
+  border-color: var(--uc-accent);
+  color: var(--uc-accent);
+  font-weight: 600;
+}
+
+.uc-select {
+  background: var(--bg-darkest);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  padding: 8px 12px;
+  width: 100%;
+  cursor: pointer;
+}
+.uc-select:focus { outline: none; border-color: var(--uc-accent); }
+
+.uc-input {
+  background: var(--bg-darkest);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  width: 100%;
+  transition: border-color var(--transition);
+}
+.uc-input:focus { outline: none; border-color: var(--uc-accent); box-shadow: 0 0 0 3px rgba(74,158,255,0.15); }
+.uc-input::placeholder { color: var(--text-muted); }
+
+.setting-checkboxes { gap: 8px; }
+.uc-check-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.uc-check-label input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--uc-accent); }
+
+.uc-settings-view-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--bg-raised);
+}
+.uc-settings-view-row:last-child { border-bottom: none; }
+.uc-settings-view-row span:last-child { color: var(--uc-accent); font-weight: 600; }
+
+/* ════════════════════════════════════════════════
+   UNDERCOVER — GAME HEADER WORD PILL
+════════════════════════════════════════════════ */
+.uc-game-header { border-bottom-color: rgba(74,158,255,0.2); }
+
+.uc-word-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+.uc-word-pill-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.uc-word-pill-value {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--uc-accent);
+  text-shadow: var(--uc-word-glow);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.uc-word-pill-value.blank-word {
+  color: var(--uc-blank-color);
+  letter-spacing: 0.2em;
+}
+.uc-word-pill-value.undercover-word { color: var(--uc-undercover-color); }
+
+/* Phase badge UC variants */
+.game-phase-badge.phase-uc-word    { background: rgba(74,158,255,0.2); color: var(--uc-accent); border: 1px solid rgba(74,158,255,0.3); }
+.game-phase-badge.phase-uc-clue    { background: rgba(78,203,113,0.2); color: var(--accent-green); border: 1px solid rgba(78,203,113,0.3); }
+.game-phase-badge.phase-uc-discuss { background: rgba(240,180,41,0.2); color: var(--accent-gold); border: 1px solid rgba(240,180,41,0.3); }
+.game-phase-badge.phase-uc-vote    { background: rgba(232,93,93,0.2); color: var(--accent-red); border: 1px solid rgba(232,93,93,0.3); }
+.game-phase-badge.phase-uc-guess   { background: rgba(155,109,255,0.2); color: var(--accent-purple); border: 1px solid rgba(155,109,255,0.3); }
+
+/* ════════════════════════════════════════════════
+   UNDERCOVER — WORD REVEAL PANEL
+════════════════════════════════════════════════ */
+.uc-word-reveal-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.uc-word-card {
+  background: var(--bg-card);
+  border: 2px solid var(--uc-accent);
+  border-radius: var(--radius-xl);
+  padding: 36px 48px;
+  text-align: center;
+  box-shadow: var(--uc-word-glow);
+  animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+  max-width: 380px;
+  width: 100%;
+}
+.uc-word-card.undercover-card { border-color: var(--uc-undercover-color); box-shadow: 0 0 24px rgba(155,109,255,0.3); }
+.uc-word-card.blank-card      { border-color: var(--uc-blank-color); box-shadow: none; }
+
+.uc-word-card .wc-role-emoji { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+.uc-word-card .wc-role-name  {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 16px;
+}
+.uc-word-card.civilian-card  .wc-role-name { color: var(--uc-civilian-color); }
+.uc-word-card.undercover-card .wc-role-name { color: var(--uc-undercover-color); }
+.uc-word-card.blank-card      .wc-role-name { color: var(--uc-blank-color); }
+
+.uc-word-card .wc-word {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  word-break: break-word;
+}
+.uc-word-card.blank-card .wc-word { color: var(--uc-blank-color); letter-spacing: 0.3em; }
+.uc-word-card .wc-hint {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  max-width: 260px;
+  margin: 0 auto;
+}
+.uc-category-badge {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-light);
+  border-radius: 100px;
+  padding: 4px 14px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ════════════════════════════════════════════════
+   UNDERCOVER — CLUE BOARD
+════════════════════════════════════════════════ */
+.uc-clue-board,
+.uc-clue-board-readonly {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.uc-clue-board h4,
+.uc-clue-board-readonly h4 {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.clue-entry {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-mid);
+  font-size: 0.88rem;
+  animation: slideIn 0.2s ease;
+  transition: background var(--transition);
+}
+.clue-entry.is-current-turn {
+  background: rgba(74,158,255,0.1);
+  border: 1px solid rgba(74,158,255,0.3);
+}
+.clue-entry .ce-name  { font-weight: 600; color: var(--text-secondary); min-width: 80px; }
+.clue-entry .ce-clue  { color: var(--text-primary); flex: 1; word-break: break-word; }
+.clue-entry .ce-skip  { color: var(--text-muted); font-style: italic; }
+.clue-entry .ce-waiting { color: var(--text-muted); font-style: italic; }
+.clue-entry .ce-order { font-size: 0.7rem; color: var(--text-muted); min-width: 20px; }
+
+.clue-turn-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(74,158,255,0.08);
+  border: 1px solid rgba(74,158,255,0.25);
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  color: var(--uc-accent);
+  animation: pulse 1.5s ease infinite;
+}
+
+/* ════════════════════════════════════════════════
+   UNDERCOVER — CLUE INPUT AREA
+════════════════════════════════════════════════ */
+.uc-clue-input-area { display: flex; flex-direction: column; gap: 12px; }
+
+.uc-clue-my-turn {
+  background: rgba(74,158,255,0.08);
+  border: 1px solid rgba(74,158,255,0.3);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.3s ease;
+}
+.uc-clue-my-turn h3 { font-family: var(--font-display); font-size: 1.1rem; color: var(--uc-accent); }
+.uc-clue-my-turn p  { font-size: 0.88rem; color: var(--text-secondary); }
+.uc-clue-form {
+  display: flex;
+  gap: 8px;
+}
+.uc-clue-form .uc-input { flex: 1; }
+
+.uc-clue-waiting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  padding: 8px 0;
+}
+.uc-clue-submitted {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(78,203,113,0.1);
+  border: 1px solid rgba(78,203,113,0.3);
+  border-radius: var(--radius-md);
+  color: var(--accent-green);
+  padding: 12px 16px;
+  font-size: 0.88rem;
+}
+
+.uc-host-controls {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+.uc-host-vote-btn {
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+}
+
+/* ════════════════════════════════════════════════
+   UNDERCOVER — BLANK GUESS PANEL
+════════════════════════════════════════════════ */
+.uc-guess-area {
+  background: var(--bg-card);
+  border: 1px solid rgba(155,109,255,0.3);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  max-width: 440px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(155,109,255,0.15);
+}
+.uc-guess-waiting { display: flex; flex-direction: column; align-items: center; gap: 12px; color: var(--text-secondary); font-size: 0.9rem; }
+.uc-guess-input { display: flex; flex-direction: column; gap: 16px; }
+.uc-guess-prompt { font-size: 1rem; color: var(--text-secondary); }
+.uc-guess-form { display: flex; gap: 8px; }
+.uc-guess-form .uc-input { flex: 1; font-size: 1rem; }
+.uc-timer-guess {
+  font-size: 0.85rem;
+  color: var(--accent-red);
+  font-weight: 600;
+}
+
+/* ════════════════════════════════════════════════
+   UNDERCOVER — GAME OVER
+════════════════════════════════════════════════ */
+.game-over-banner.civilian-wins   { background: rgba(74,158,255,0.08); border-color: rgba(74,158,255,0.3); }
+.game-over-banner.civilian-wins h2 { color: var(--uc-civilian-color); }
+.game-over-banner.undercover-wins  { background: rgba(155,109,255,0.08); border-color: rgba(155,109,255,0.3); }
+.game-over-banner.undercover-wins h2 { color: var(--uc-undercover-color); }
+.game-over-banner.blank-wins       { background: rgba(136,153,170,0.08); border-color: rgba(136,153,170,0.3); }
+.game-over-banner.blank-wins h2    { color: var(--uc-blank-color); }
+
+.uc-word-reveal-final {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 24px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+.uc-word-reveal-final h4 { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+.uc-final-words { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.uc-final-word-item { text-align: center; }
+.uc-final-word-item .ufw-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.uc-final-word-item .ufw-word  { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; margin-top: 4px; }
+.uc-final-word-item.civilian  .ufw-word { color: var(--uc-civilian-color); }
+.uc-final-word-item.undercover .ufw-word { color: var(--uc-undercover-color); }
+
+/* ════════════════════════════════════════════════
+   UNDERCOVER — PLAYER LIST ROLE COLOURS
+════════════════════════════════════════════════ */
+.game-player-item.uc-civilian-reveal   { border-color: rgba(74,158,255,0.35); background: rgba(74,158,255,0.05); }
+.game-player-item.uc-undercover-reveal { border-color: rgba(155,109,255,0.35); background: rgba(155,109,255,0.05); }
+.game-player-item.uc-blank-reveal      { border-color: rgba(136,153,170,0.35); background: rgba(136,153,170,0.05); }
+
+/* ════════════════════════════════════════════════
+   UNDERCOVER — VOTE RESULT  (reuses existing
+   vote-result-card but with UC accent colours)
+════════════════════════════════════════════════ */
+.vote-result-card.uc-eliminated { border-color: rgba(155,109,255,0.45); }
+.vote-result-card.uc-no-elim    { border-color: rgba(74,158,255,0.3); }
+
+/* Home cards: mafia shown by default, UC hidden; JS switches via .hidden class */
+.card.uc-card { display: none; }
