@@ -48,8 +48,8 @@ const UCState = {
 };
 
 const UC_SESSION_KEY = 'uc_session';
-const PLAYER_AVATARS = ['🧑','👩','👨','🧔','👱','🧕','👲','🧓','👴','👵','🧑‍🦰','🧑‍🦱'];
-const CIRCUMFERENCE  = 2 * Math.PI * 18;
+const UC_AVATARS     = ['🧑','👩','👨','🧔','👱','🧕','👲','🧓','👴','👵','🧑‍🦰','🧑‍🦱'];
+const UC_CIRCUMFERENCE = 2 * Math.PI * 18;
 
 const UC_PHASE_LABELS = {
   uc_lobby:        { label: 'Lobby',       cls: '' },
@@ -528,7 +528,7 @@ function renderUcLobby(state) {
     const li = document.createElement('li');
     li.className = `player-list-item${isYou ? ' is-you' : ''}`;
     li.innerHTML = `
-      <div class="player-avatar">${PLAYER_AVATARS[i % PLAYER_AVATARS.length]}</div>
+      <div class="player-avatar">${UC_AVATARS[i % UC_AVATARS.length]}</div>
       <span class="player-name">${escHtml(p.name)}</span>
       ${isHost ? '<span class="player-host-badge">Host</span>' : ''}
       ${isYou  ? '<span class="player-you-badge">You</span>' : ''}
@@ -664,7 +664,7 @@ function startUcTimer(endTime) {
     if (label) label.textContent = sec;
     const ratio = totalMs > 0 ? remaining / totalMs : 0;
     if (fill) {
-      fill.style.strokeDashoffset = CIRCUMFERENCE * (1 - ratio);
+      fill.style.strokeDashoffset = UC_CIRCUMFERENCE * (1 - ratio);
       fill.classList.toggle('urgent', sec <= 10);
     }
     if (remaining <= 0) stopUcTimer();
@@ -1008,7 +1008,7 @@ function renderUcVotePanel(state) {
     btn.dataset.targetId = p.id;
     if (UCState.myVote === p.id) btn.classList.add('voted');
     btn.innerHTML = `
-      <span class="v-avatar">${PLAYER_AVATARS[i % PLAYER_AVATARS.length]}</span>
+      <span class="v-avatar">${UC_AVATARS[i % UC_AVATARS.length]}</span>
       <span>${escHtml(p.name)}</span>
       <span class="v-count" style="display:none">0</span>
     `;
@@ -1245,7 +1245,7 @@ function renderUcPlayerList(players) {
       : '';
 
     li.innerHTML = `
-      <span class="gp-avatar">${p.alive ? PLAYER_AVATARS[i % PLAYER_AVATARS.length] : '💀'}</span>
+      <span class="gp-avatar">${p.alive ? UC_AVATARS[i % UC_AVATARS.length] : '💀'}</span>
       <span class="gp-name">${escHtml(p.name)}</span>
       ${roleTag}
       ${clueGiven}
