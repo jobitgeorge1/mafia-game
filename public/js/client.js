@@ -60,8 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
   bindGameEvents();
   initSocket();
   attemptReconnect();
-  // Ensure UC cards start hidden (JS-controlled, not CSS-only)
-  document.querySelectorAll('.card.uc-card').forEach(c => c.style.display = 'none');
 });
 
 // ═══════════════════════════════════════════════

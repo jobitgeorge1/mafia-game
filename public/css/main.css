@@ -1624,5 +1624,4 @@ body.game-undercover .home-cards .card.uc-card    { display: flex; }
 .vote-result-card.uc-eliminated { border-color: rgba(155,109,255,0.45); }
 .vote-result-card.uc-no-elim    { border-color: rgba(74,158,255,0.3); }
 
-/* Home cards: mafia shown by default, UC hidden; JS switches via .hidden class */
-.card.uc-card { display: none; }
+/* Home cards: uc-card default hidden — body.game-undercover class handles toggling */

@@ -88,12 +88,10 @@ function switchGamePicker(game) {
   qs('#pick-mafia')?.classList.toggle('active', game === 'mafia');
   qs('#pick-undercover')?.classList.toggle('active', game === 'undercover');
 
-  // Toggle card visibility directly
-  document.querySelectorAll('.card.mafia-card').forEach(c => {
-    c.style.display = game === 'undercover' ? 'none' : '';
-  });
-  document.querySelectorAll('.card.uc-card').forEach(c => {
-    c.style.display = game === 'undercover' ? '' : 'none';
+  // CSS driven by body.game-undercover class — no inline styles needed.
+  // Remove any inline display overrides so CSS rules take full control.
+  document.querySelectorAll('.card.mafia-card, .card.uc-card').forEach(c => {
+    c.style.display = '';
   });
 
   // Switch rules panel content
@@ -289,7 +287,12 @@ function submitUcGuess() {
 // ─────────────────────────────────────────────
 function initUcSocket() {
   const s = getSocket();
-  if (!s) { setTimeout(initUcSocket, 100); return; }
+  // client.js creates the socket in its own DOMContentLoaded.
+  // If it isn't ready yet, retry until it is.
+  if (!s) {
+    setTimeout(initUcSocket, 50);
+    return;
+  }
 
   // ── Room created ──────────────────────────
   s.on('uc_room_created', ({ roomCode, playerId, playerName, categories }) => {
@@ -1349,18 +1352,18 @@ function attemptUcReconnect() {
   UCState.playerId   = session.playerId;
   UCState.playerName = session.playerName;
   UCState.roomCode   = session.roomCode;
-  // Re-join will be triggered by socket 'connect' event in client.js
-  // But for UC we need to emit separately; piggyback on connect event
+  // Wait for the socket to be ready (created by client.js) then re-join
   const doReconnect = () => {
     const s = getSocket();
-    if (!s?.connected) { setTimeout(doReconnect, 200); return; }
+    if (!s) { setTimeout(doReconnect, 100); return; }
+    if (!s.connected) { setTimeout(doReconnect, 200); return; }
     s.emit('uc_join_room', {
       roomCode:   session.roomCode,
       playerName: session.playerName,
       playerId:   session.playerId,
     });
   };
-  setTimeout(doReconnect, 150);
+  setTimeout(doReconnect, 200);
 }
 
 // ─────────────────────────────────────────────
